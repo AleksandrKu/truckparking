@@ -1,11 +1,8 @@
+'use strict';
 const express = require('express');
 const router = express.Router();
+const parseController = require('../controllers/parseController');
 
 /* GET parse listing. */
-router.get('/', function(req, res, next) {
-
-  res.send('Hello from parse');
-
-});
-
+router.get('/', parseController.result);
 module.exports = router;

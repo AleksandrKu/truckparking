@@ -1,7 +1,99 @@
-{% extends 'layout.twig' %}
+{#{% extends 'layout.twig' %}
 
 {% block body %}
   <h1>{{title}}</h1>
   <p>Welcome to {{title}}</p>
   <a href="/parse" class="href">Парсер</a>
-{% endblock %}
+{% endblock %}#}
+
+<html>
+<head>
+    <title>Truckparking Parser</title>
+    <link rel="stylesheet" href="/stylesheets/bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="/stylesheets/client.css">
+</head>
+<body>
+{% if not loggin %}
+    <div id="main-container">
+        <div class="container"><br>
+            <div class="header clearfix"><h1 style="text-align: center">Truckparking Parser</h1><br>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="jumbotron">
+                <div class="display-5" id="work">Parser is not working!</div><br>
+                <h3 id="count"></h3>
+                <div class="text-center">
+                    <a class="btn btn-primary btn-lg btn-outline-success" role="button" id="start">Start parse</a>
+                </div>
+                <div style="text-align: center">
+                    <br>
+                <div > <a class="btn btn-primary btn-lg btn-outline-success" role="button" title="Download file" id="download">{{ info }}</a> </div>
+                </div>
+                {# <div class="text-center">
+                    <a class="btn btn-primary btn-lg btn-outline-warning" role="button" id="stop">Stop parse</a>
+                </div>#}
+            </div><div id="count-all-points"></div>
+            </div><div id="result"></div>
+        </div>
+
+
+    </div>
+{% endif %}
+<script src="/socket.io/socket.io.js"></script>
+<script>
+/*    var socket = io('http://localhost', {
+        origins: "http://localhost:9292"
+    });
+    socket.on('connect', function(){});
+    socket.on('event', function(data){});
+    socket.on('disconnect', function(){});*/
+</script>
+<script>
+    window.onload = function() {
+        //var socket = io.connect('http://159.89.5.205:9292');
+         const socket = io.connect('http://localhost:9292');
+
+        const working = document.querySelector('#work');
+        const countAllPoints = document.querySelector('#count-all-points');
+        socket.on('countAllPoints', (data) => {
+            console.log(data);
+            countAllPoints.innerHTML = `Parkings ${data.countAllPoints}`;
+        });
+        const download = document.getElementById("download");
+        download.onclick = () => {
+            window.location.href = "/download/";
+        }
+        const button_start = document.getElementById("start");
+        button_start.onclick = () => {
+            console.log(working);
+            document.getElementById("result").innerHTML = `<img src="./images/load.gif">`;
+            working.innerHTML = 'Parser is working!';
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () { //Вызывает функцию при смене состояния.
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("result").innerHTML = 'File ' + xhr.responseText + ' download!';
+                    working.innerHTML = 'The end!!!';
+                   // window.location.href = "/download/";
+                    console.log('XMLHttpRequest');
+                } else {
+                 //
+                }
+            };
+            xhr.open("GET", '/parse', true);//если установлено в false, то запрос производится синхронно, если true – асинхронно
+            // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send();
+        };
+        socket.once('endParsing', (data) => {
+            document.getElementById("result").innerHTML = `File ${data.fileName} download!`;
+            working.innerHTML = 'The end!!!';
+            setTimeout( () => {
+                window.location.href = "/download/";
+            }, 2000)
+
+        });
+    };
+</script>
+</body>
+</html>
