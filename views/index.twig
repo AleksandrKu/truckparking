@@ -52,8 +52,8 @@
 </script>
 <script>
     window.onload = function() {
-        //var socket = io.connect('http://159.89.5.205:9292');
-         const socket = io.connect('http://localhost:9292');
+        var socket = io.connect('http://159.89.5.205:9292');
+        // const socket = io.connect('http://localhost:9292');
 
         const working = document.querySelector('#work');
         const countAllPoints = document.querySelector('#count-all-points');
