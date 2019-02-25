@@ -10,23 +10,25 @@ function download(req, res) {
         const file = path.join(__dirname, "..", "files", fileName);
         const fileGz = path.join(__dirname, "..", "files", fileName + ".gz");
 
-        const read = fs.createReadStream(file);
+/*        const read = fs.createReadStream(file);
         const write = fs.createWriteStream(fileGz);
         read.pipe(gzip).pipe(write);
         write.once('finish', () => {
             console.log('download   finish');
             setTimeout( () => {
-                res.download(fileGz);
+
             } ,2000);
-        });
-        write.on('error', (req, res, next) => {
+        }); */
+
+        res.download(file);
+     /*   write.on('error', (req, res, next) => {
             console.log("Write Error !");
             res.render('error.twig', {message: 'Error download file'});
         });
         read.on('error', function (req, res, next) {
             console.log("Read Error !");
             res.render('index', {message: 'Error download file'});
-        });
+        });*/
     } catch (err) {
         console.log("Error !");
         res.render('error.twig', {message: 'Error download file'});
