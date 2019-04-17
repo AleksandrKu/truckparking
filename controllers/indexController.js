@@ -4,7 +4,7 @@ const { fileName } = require('../config');
 
 module.exports.index = function (req, res, next) {
 
-    fs.stat('./files/'+fileName, (err, stats) => {
+    fs.stat('../files/'+fileName, (err, stats) => {
         if (err) {
             console.error('No file')
             console.error(err)
